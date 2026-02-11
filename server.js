@@ -8,6 +8,7 @@ import { syncModels } from './src/models/index.js';
 import authRoutes from './src/routes/authRoutes.js';
 import newsRoutes from './src/routes/newsRoutes.js';
 import collectionRoutes from './src/routes/collectionRoutes.js';
+import emailRoutes from './src/routes/emailRoutes.js';
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -56,6 +57,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/collections', collectionRoutes);
+app.use('/api/email', emailRoutes);
 
 // Middleware de tratamento de erros
 app.use((err, req, res, next) => {

@@ -36,6 +36,10 @@ const User = sequelize.define('User', {
     type: DataTypes.ENUM('daily', 'weekly', 'never'),
     allowNull: false,
     defaultValue: 'never'
+  },
+  lastDigestSentAt: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 }, {
   tableName: 'users',
