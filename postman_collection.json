@@ -1,0 +1,240 @@
+{
+  "info": {
+    "name": "News API Backend",
+    "description": "Coleção para testar a API News",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check",
+      "item": [
+        {
+          "name": "Root - API Online",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}"
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Autenticação",
+      "item": [
+        {
+          "name": "Registrar usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('token', json.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teste@example.com\",\n  \"password\": \"senha123\",\n  \"favoriteTopics\": [\"crypto\", \"AI\", \"NFT\"],\n  \"emailFrequency\": \"daily\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('token', json.data.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teste@example.com\",\n  \"password\": \"senha123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Perfil",
+      "item": [
+        {
+          "name": "Obter perfil",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/auth/profile"
+          }
+        },
+        {
+          "name": "Atualizar perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"favoriteTopics\": [\"crypto\", \"NFT\", \"AI\", \"blockchain\"],\n  \"emailFrequency\": \"weekly\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Notícias",
+      "item": [
+        {
+          "name": "Buscar notícias por tópico",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {
+              "raw": "{{baseUrl}}/api/news/search?topic=crypto&page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "news", "search"],
+              "query": [
+                {"key": "topic", "value": "crypto"},
+                {"key": "page", "value": "1"},
+                {"key": "pageSize", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Notícias dos tópicos favoritos",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/news/favorites"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Coleções",
+      "item": [
+        {
+          "name": "Criar coleção",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Notícias de Crypto\"\n}"
+            },
+            "url": "{{baseUrl}}/api/collections"
+          }
+        },
+        {
+          "name": "Listar coleções",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/collections"
+          }
+        },
+        {
+          "name": "Obter coleção por ID",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/collections/1"
+          }
+        },
+        {
+          "name": "Atualizar coleção",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Melhores notícias de Crypto\"\n}"
+            },
+            "url": "{{baseUrl}}/api/collections/1"
+          }
+        },
+        {
+          "name": "Deletar coleção",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/collections/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Artigos",
+      "item": [
+        {
+          "name": "Adicionar artigo à coleção",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bitcoin atinge novo recorde\",\n  \"description\": \"Criptomoeda supera marca histórica...\",\n  \"url\": \"https://example.com/noticia-bitcoin\",\n  \"urlToImage\": \"https://example.com/imagem.jpg\",\n  \"publishedAt\": \"2024-02-04T10:00:00.000Z\",\n  \"source\": \"Example News\",\n  \"author\": \"João Silva\"\n}"
+            },
+            "url": "{{baseUrl}}/api/collections/1/articles"
+          }
+        },
+        {
+          "name": "Remover artigo da coleção",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/api/collections/1/articles/1"
+          }
+        }
+      ]
+    }
+  ]
+}
